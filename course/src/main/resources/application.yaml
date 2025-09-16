@@ -1,0 +1,19 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/course-microsservice
+    username: postgres
+    password: 299792458
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob.non-contextual-creation: true
+        show_sql: true
+        format_sql: true

@@ -1,0 +1,28 @@
+server:
+  port: 8087
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authuser-microsservice
+    username: postgres
+    password: 299792458
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jbdc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: always
+
+
+logging:
+  level:
+    com.victorxavier: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
