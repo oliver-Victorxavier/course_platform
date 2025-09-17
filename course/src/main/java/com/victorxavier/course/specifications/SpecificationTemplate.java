@@ -1,9 +1,11 @@
 package com.victorxavier.course.specifications;
 
 import com.victorxavier.course.models.CourseModel;
+import com.victorxavier.course.models.CourseUserModel;
 import com.victorxavier.course.models.LessonModel;
 import com.victorxavier.course.models.ModuleModel;
 import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
@@ -45,6 +47,15 @@ public class SpecificationTemplate {
             Root<ModuleModel> module = query.from(ModuleModel.class);
             Expression<Collection<LessonModel>> moduleLessons = module.get("lessons");
             return cb.and(cb.equal(module.get("moduleId"), moduleId), cb.isMember(lesson, moduleLessons));
+        };
+    }
+
+    public static Specification<CourseModel> courseUserId(final UUID userId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Join<CourseModel, CourseUserModel> courseProd = root.join("coursesUsers");
+            return cb.equal(courseProd.get("userId"), userId);
+
         };
     }
 
