@@ -4,7 +4,10 @@ import com.victorxavier.course_platform.course.dto.CourseDTO;
 import com.victorxavier.course_platform.course.models.CourseModel;
 import com.victorxavier.course_platform.course.services.CourseService;
 import com.victorxavier.course_platform.course.specifications.SpecificationTemplate;
+import com.victorxavier.course_platform.course.validation.CourseValidator;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +24,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/courses")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,8 +33,17 @@ public class CourseController {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    CourseValidator courseValidator;
+
     @PostMapping
-    public ResponseEntity<Object> saveCourse(@RequestBody @Valid CourseDTO courseDTO) {
+    public ResponseEntity<Object> saveCourse(@RequestBody CourseDTO courseDTO, Errors errors) {
+        log.debug("POST saveCourse courseDTO received {} ", courseDTO.toString());
+        courseValidator.validate(courseDTO, errors);
+        if (errors.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
+        }
+
         var courseModel = new CourseModel();
         BeanUtils.copyProperties(courseDTO, courseModel);
         courseModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));

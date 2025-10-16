@@ -1,9 +1,11 @@
 package com.victorxavier.course_platform.course.services.impl;
 
 import com.victorxavier.course_platform.course.models.CourseModel;
+import com.victorxavier.course_platform.course.models.CourseUserModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
 import com.victorxavier.course_platform.course.repositories.CourseRepository;
+import com.victorxavier.course_platform.course.repositories.CourseUserRepository;
 import com.victorxavier.course_platform.course.repositories.LessonRepository;
 import com.victorxavier.course_platform.course.repositories.ModuleRepository;
 import com.victorxavier.course_platform.course.services.CourseService;
@@ -31,6 +33,9 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     LessonRepository lessonRepository;
 
+    @Autowired
+    CourseUserRepository courseUserRepository;
+
 
     @Transactional
     @Override
@@ -45,7 +50,10 @@ public class CourseServiceImpl implements CourseService {
             }
             moduleRepository.deleteAll(moduleModelList);
         }
-        courseRepository.deleteCourseUserByCourse(courseModel.getCourseId());
+        List<CourseUserModel> courseUserModelList = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
+        if (!courseUserModelList.isEmpty()){
+            courseUserRepository.deleteAll(courseUserModelList);
+        }
         courseRepository.delete(courseModel);
     }
 

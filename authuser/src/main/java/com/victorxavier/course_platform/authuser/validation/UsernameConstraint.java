@@ -1,4 +1,4 @@
-package com.victorxavier.authuser.validation;
+package com.victorxavier.course_platform.authuser.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

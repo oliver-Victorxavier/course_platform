@@ -1,10 +1,10 @@
-package com.victorxavier.authuser.controller;
+package com.victorxavier.course_platform.authuser.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.victorxavier.authuser.dtos.UserDTO;
-import com.victorxavier.authuser.models.UserModel;
-import com.victorxavier.authuser.services.UserService;
-import com.victorxavier.authuser.specifications.SpecificationTemplate;
+import com.victorxavier.course_platform.authuser.dtos.UserDTO;
+import com.victorxavier.course_platform.authuser.models.UserModel;
+import com.victorxavier.course_platform.authuser.services.UserService;
+import com.victorxavier.course_platform.authuser.specifications.SpecificationTemplate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,11 +1,11 @@
-package com.victorxavier.authuser.models;
+package com.victorxavier.course_platform.authuser.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.victorxavier.authuser.enums.UserStatus;
-import com.victorxavier.authuser.enums.UserType;
+import com.victorxavier.course_platform.authuser.enums.UserStatus;
+import com.victorxavier.course_platform.authuser.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
@@ -68,5 +68,8 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<UserCourseModel> userCourses;
 
+    public UserCourseModel convertToUserCourseModel(UUID courseId){
+        return new UserCourseModel(null, courseId, this);
+    }
 
 }

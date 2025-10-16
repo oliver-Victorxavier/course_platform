@@ -12,4 +12,5 @@ public interface CourseUserService {
     CourseUserModel save(CourseUserModel courseUserModel);
 
 
+    CourseUserModel saveAndSendSubscriptionUserInCourse(CourseUserModel courseUserModel);
 }

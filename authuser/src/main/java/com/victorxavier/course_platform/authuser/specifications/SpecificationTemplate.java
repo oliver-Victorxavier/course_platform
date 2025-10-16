@@ -1,7 +1,7 @@
-package com.victorxavier.authuser.specifications;
+package com.victorxavier.course_platform.authuser.specifications;
 
-import com.victorxavier.authuser.models.UserCourseModel;
-import com.victorxavier.authuser.models.UserModel;
+import com.victorxavier.course_platform.authuser.models.UserCourseModel;
+import com.victorxavier.course_platform.authuser.models.UserModel;
 import jakarta.persistence.criteria.Join;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;

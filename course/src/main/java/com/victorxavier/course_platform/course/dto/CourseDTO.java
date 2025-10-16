@@ -14,13 +14,16 @@ public record CourseDTO(
 
         @NotBlank
         String description,
+
         String imageUrl,
+
+        @NotNull
+        UUID userInstructor,
 
         @NotNull
         CourseStatus courseStatus,
         @NotNull
-        CourseLevel courseLevel,
-        @NotNull
-        UUID userInstructor
+        CourseLevel courseLevel
+
 ) {
 }

@@ -1,8 +1,10 @@
-package com.victorxavier.authuser.services.impl;
+package com.victorxavier.course_platform.authuser.services.impl;
 
-import com.victorxavier.authuser.models.UserModel;
-import com.victorxavier.authuser.repositories.UserRepository;
-import com.victorxavier.authuser.services.UserService;
+import com.victorxavier.course_platform.authuser.models.UserCourseModel;
+import com.victorxavier.course_platform.authuser.models.UserModel;
+import com.victorxavier.course_platform.authuser.repositories.UserCourseRepository;
+import com.victorxavier.course_platform.authuser.repositories.UserRepository;
+import com.victorxavier.course_platform.authuser.services.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +21,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    private UserCourseRepository userCourseRepository;
 
 
     @Override
@@ -35,6 +38,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(UserModel userModel) {
+        List<UserCourseModel> userCourseModelList = userCourseRepository.findAllUserCourseIntoUser(userModel.getUserId());
+        if (!userCourseModelList.isEmpty()) {
+            userCourseRepository.deleteAll(userCourseModelList);
+        }
         userRepository.delete(userModel);
     }
 

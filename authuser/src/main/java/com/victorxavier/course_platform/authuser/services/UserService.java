@@ -1,6 +1,6 @@
-package com.victorxavier.authuser.services;
+package com.victorxavier.course_platform.authuser.services;
 
-import com.victorxavier.authuser.models.UserModel;
+import com.victorxavier.course_platform.authuser.models.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

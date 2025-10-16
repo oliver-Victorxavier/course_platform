@@ -22,7 +22,12 @@ spring:
 
 logging:
   level:
-    com.victorxavier: TRACE
+    com.victorxavier.course_platform: TRACE
     root: INFO
     org.springframework.web: DEBUG
     org.hibernate: INFO
+
+course_platform:
+  api:
+    url:
+      course: 'http://localhost:8082'

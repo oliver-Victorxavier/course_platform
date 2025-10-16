@@ -1,4 +1,4 @@
-package com.victorxavier.authuser;
+package com.victorxavier.course_platform.authuser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

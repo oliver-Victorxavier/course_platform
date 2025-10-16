@@ -1,4 +1,4 @@
-package com.victorxavier.authuser;
+package com.victorxavier.course_platform.authuser;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

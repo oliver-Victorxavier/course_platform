@@ -1,7 +1,6 @@
-package com.victorxavier.authuser.repositories;
+package com.victorxavier.course_platform.authuser.repositories;
 
-import com.victorxavier.authuser.models.UserModel;
-import org.springframework.data.jpa.repository.EntityGraph;
+import com.victorxavier.course_platform.authuser.models.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

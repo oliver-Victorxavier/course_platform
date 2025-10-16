@@ -1,8 +1,8 @@
-package com.victorxavier.authuser.dtos;
+package com.victorxavier.course_platform.authuser.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.victorxavier.authuser.validation.UsernameConstraint;
+import com.victorxavier.course_platform.authuser.validation.UsernameConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

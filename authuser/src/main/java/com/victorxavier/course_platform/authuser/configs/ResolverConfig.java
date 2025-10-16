@@ -1,4 +1,4 @@
-package com.victorxavier.authuser.configs;
+package com.victorxavier.course_platform.authuser.configs;
 
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.springframework.context.annotation.Configuration;
