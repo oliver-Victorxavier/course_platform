@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: course-platform-api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: authuser-service
+              uri: http://localhost:8087
+              predicates:
+                - Path=/course-platform-authuser/**
+
+            - id: course-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/course-platform-course/**
