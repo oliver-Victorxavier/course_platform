@@ -34,7 +34,7 @@ logging:
 course_platform:
   api:
     url:
-      course: 'http://course-platform-course-service'
+      course: 'http://course-platform-course-service/course-platform-course'
 
 
 eureka:

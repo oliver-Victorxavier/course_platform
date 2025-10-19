@@ -5,7 +5,7 @@ import com.victorxavier.course_platform.authuser.enums.UserType;
 import com.victorxavier.course_platform.authuser.models.UserModel;
 import com.victorxavier.course_platform.authuser.services.UserService;
 import jakarta.validation.Valid;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
-@Log4j2
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/instructors")

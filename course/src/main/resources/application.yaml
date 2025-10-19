@@ -36,7 +36,7 @@ logging:
 course_platform:
   api:
     url:
-      authuser: 'http://course-platform-authuser-service'
+      authuser: 'http://course-platform-authuser-service/course-platform-authuser'
 
 eureka:
   client:

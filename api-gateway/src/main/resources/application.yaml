@@ -5,17 +5,27 @@ spring:
   application:
     name: course-platform-api-gateway
 
+
   cloud:
     gateway:
       server:
         webflux:
           routes:
             - id: authuser-service
-              uri: http://localhost:8087
+              uri: lb://COURSE-PLATFORM-AUTHUSER-SERVICE
               predicates:
                 - Path=/course-platform-authuser/**
 
             - id: course-service
-              uri: http://localhost:8082
+              uri: lb://COURSE-PLATFORM-COURSE-SERVICE
               predicates:
                 - Path=/course-platform-course/**
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost

@@ -6,7 +6,6 @@ import com.victorxavier.course_platform.course.services.CourseService;
 import com.victorxavier.course_platform.course.specifications.SpecificationTemplate;
 import com.victorxavier.course_platform.course.validation.CourseValidator;
 import jakarta.validation.Valid;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +89,7 @@ public class CourseController {
         }
 
     }
-    
+
     @GetMapping("/{courseId}")
     public ResponseEntity<Object> getOneCourse(@PathVariable(value = "courseId") UUID courseId) {
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
