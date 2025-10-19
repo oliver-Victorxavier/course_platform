@@ -1,4 +1,4 @@
-package com.victorxavier.notification;
+package com.victorxavier.course_platform.notification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

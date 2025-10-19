@@ -1,4 +1,4 @@
-package com.victorxavier.notification;
+package com.victorxavier.course_platform.notification;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
