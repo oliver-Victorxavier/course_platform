@@ -1,7 +1,7 @@
 package com.victorxavier.course_platform.course.specifications;
 
 import com.victorxavier.course_platform.course.models.CourseModel;
-import com.victorxavier.course_platform.course.models.CourseUserModel;
+import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
 import jakarta.persistence.criteria.Expression;
@@ -47,15 +47,6 @@ public class SpecificationTemplate {
             Root<ModuleModel> module = query.from(ModuleModel.class);
             Expression<Collection<LessonModel>> moduleLessons = module.get("lessons");
             return cb.and(cb.equal(module.get("moduleId"), moduleId), cb.isMember(lesson, moduleLessons));
-        };
-    }
-
-    public static Specification<CourseModel> courseUserId(final UUID userId) {
-        return (root, query, cb) -> {
-            query.distinct(true);
-            Join<CourseModel, CourseUserModel> courseProd = root.join("coursesUsers");
-            return cb.equal(courseProd.get("userId"), userId);
-
         };
     }
 

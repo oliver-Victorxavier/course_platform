@@ -1,4 +1,4 @@
-package com.victorxavier.course_platform.authuser.models;
+package com.victorxavier.course_platform.course.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
@@ -14,18 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
-@Table(name = "TB_USERS_COURSES")
-public class UserCourseModel implements Serializable {
+@Table(name = "TB_USERS")
+public class UserModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
-
-    @Column(nullable = false)
-    private UUID courseId;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private UserModel user;
+    private UUID userId;
 
 }
