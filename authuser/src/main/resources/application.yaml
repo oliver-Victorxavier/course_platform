@@ -7,7 +7,7 @@ spring:
   application:
     name: course-platform-authuser-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/authuser-microsservice
+    url: jdbc:postgresql://localhost:5432/course-platform-authuser
     username: postgres
     password: 299792458
   jpa:
