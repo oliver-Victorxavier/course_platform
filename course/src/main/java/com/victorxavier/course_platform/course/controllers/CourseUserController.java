@@ -1,7 +1,9 @@
 package com.victorxavier.course_platform.course.controllers;
 
 import com.victorxavier.course_platform.course.dto.SubscriptionDTO;
+import com.victorxavier.course_platform.course.enums.UserStatus;
 import com.victorxavier.course_platform.course.models.CourseModel;
+import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.services.CourseService;
 import com.victorxavier.course_platform.course.services.UserService;
 import com.victorxavier.course_platform.course.specifications.SpecificationTemplate;
@@ -30,8 +32,8 @@ public class CourseUserController {
 
     @GetMapping("/courses/{courseId}/users")
     public ResponseEntity<Object> getAllUsersByCourse(SpecificationTemplate.UserSpec spec,
-            @PageableDefault(page = 0, size = 10, sort = "courseId",direction = Sort.Direction.ASC) Pageable pageable,
-                                                      @PathVariable(value = "courseId") UUID courseId){
+            @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+                                    @PathVariable(value = "courseId") UUID courseId) {
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
         if (!courseModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");}
@@ -47,9 +49,26 @@ public class CourseUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
         }
 
-        //state transfer
-     return ResponseEntity.status(HttpStatus.CREATED).body(" ");
+        // Verification with state transfer pattern
 
+        if (courseService.existsByCourseAndUser(courseId, subscriptionDTO.userId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Error: User already subscribed to this course.");
+        }
+
+        Optional<UserModel> userModelOptional = userService.findById(subscriptionDTO.userId());
+        if (!userModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User Not Found.");
+        }
+        if (userModelOptional.get().getUserStatus().equals(UserStatus.BLOCKED.toString())){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Error: User is blocked.");
+        }
+
+        courseService.saveSubscriptionUserInCourse(courseId, subscriptionDTO.userId());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User subscribed to course successfully.");
     }
 
 }

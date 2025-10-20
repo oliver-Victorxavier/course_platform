@@ -72,8 +72,9 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.existsByCourseAndUser(courseId, userId);
     }
 
+    @Transactional
     @Override
-    public void saveSubscribedToCourse(UUID courseId, UUID userId) {
+    public void saveSubscriptionUserInCourse(UUID courseId, UUID userId) {
         courseRepository.saveCourseUser(courseId, userId);
     }
 

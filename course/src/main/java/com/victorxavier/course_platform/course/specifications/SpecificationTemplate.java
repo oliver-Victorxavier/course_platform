@@ -5,6 +5,7 @@ import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
 import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
@@ -60,10 +61,8 @@ public class SpecificationTemplate {
     public static Specification<UserModel> userCourseId(final UUID courseId) {
         return (root, query, cb) -> {
             query.distinct(true);
-            Root<UserModel> user = root;
-            Root<CourseModel> course = query.from(CourseModel.class);
-            Expression<Collection<UserModel>> courseUsers = course.get("users");
-            return cb.and(cb.equal(course.get("courseId"), courseId), cb.isMember(user, courseUsers));
+            Join<UserModel, CourseModel> courseJoin = root.join("courses");
+            return cb.equal(courseJoin.get("courseId"), courseId);
         };
     }
 
