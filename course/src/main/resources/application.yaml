@@ -24,6 +24,8 @@ spring:
   output:
     ansi:
       enabled: always
+  rabbitmq:
+    addresses: amqps://wemicgbt:w7zguO9YZNVbloAmOq173xzmfay-trtw@chimpanzee.rmq.cloudamqp.com/wemicgbt
 
 
 logging:

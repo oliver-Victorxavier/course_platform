@@ -3,10 +3,12 @@ package com.victorxavier.course_platform.authuser.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.victorxavier.course_platform.authuser.dtos.UserEventDTO;
 import com.victorxavier.course_platform.authuser.enums.UserStatus;
 import com.victorxavier.course_platform.authuser.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -61,5 +63,21 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime lastUpdateDate;
+
+    public UserEventDTO convertToUserEventDTO() {
+        return new UserEventDTO(
+                this.userId,
+                this.username,
+                this.email,
+                this.fullName,
+                this.userStatus.toString(),
+                this.userType.toString(),
+                this.phoneNumber,
+                this.cpf,
+                this.imageUrl,
+                null
+        );
+    }
+
 
 }

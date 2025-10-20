@@ -1,6 +1,8 @@
 package com.victorxavier.course_platform.authuser.services.impl;
 
+import com.victorxavier.course_platform.authuser.enums.ActionType;
 import com.victorxavier.course_platform.authuser.models.UserModel;
+import com.victorxavier.course_platform.authuser.publishers.UserEventPublisher;
 import com.victorxavier.course_platform.authuser.repositories.UserRepository;
 import com.victorxavier.course_platform.authuser.services.UserService;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserEventPublisher userEventPublisher;
 
 
     @Override
@@ -58,5 +63,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(spec, pageable);
     }
 
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel userModel) {
+
+        userModel = save(userModel);
+        userEventPublisher.publishUserEvent(userModel.convertToUserEventDTO(), ActionType.CREATE);
+        return userModel;
+
+    }
 
 }

@@ -22,6 +22,8 @@ spring:
   output:
     ansi:
       enabled: always
+  rabbitmq:
+    addresses: amqps://wemicgbt:w7zguO9YZNVbloAmOq173xzmfay-trtw@chimpanzee.rmq.cloudamqp.com/wemicgbt
 
 
 logging:
@@ -35,6 +37,9 @@ course_platform:
   api:
     url:
       course: 'http://course-platform-course-service/course-platform-course'
+  broker:
+    exchange:
+      userEvent: course_platform.userevent
 
 
 eureka:
