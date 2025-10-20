@@ -39,6 +39,12 @@ course_platform:
   api:
     url:
       authuser: 'http://course-platform-authuser-service/course-platform-authuser'
+  broker:
+    exchange:
+      userEventExchange: course_platform.userevent
+    queue:
+      userEventQueue:
+        name: course_platform.userevent.ms.course
 
 eureka:
   client:
