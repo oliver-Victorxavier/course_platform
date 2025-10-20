@@ -70,7 +70,7 @@ public class UserController {
         if (!userModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         } else {
-            userService.delete(userModelOptional.get());
+            userService.deleteUser(userModelOptional.get());
             log.debug("DELETE deleteUser userId saved {}", userId);
             log.info("User deleted sucessfully userId {} ", userId);
             return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
@@ -91,7 +91,7 @@ public class UserController {
             userModel.setPhoneNumber(userDto.phoneNumber());
             userModel.setCpf(userDto.cpf());
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
+            userService.updateUser(userModel);
             log.debug("PUT updateUser userId saved {}", userModel.getUserId());
             log.debug("User updated sucessfully userId {}", userModel.getUserId());
 
@@ -115,7 +115,7 @@ public class UserController {
             var userModel = userModelOptional.get();
             userModel.setPassword(userDto.password());
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
+            userService.updatePassword(userModel);
             log.debug("PUT updatePassword userId saved {}", userModel.getUserId());
             log.info("Password updated successfully userId {}", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.OK).body("Password updated sucessfully");
@@ -135,7 +135,7 @@ public class UserController {
             var userModel = userModelOptional.get();
             userModel.setImageUrl(userDto.imageUrl());
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
+            userService.updateUser(userModel);
             log.debug("PUT updateImage userId saved {}", userModel.getUserId());
             log.info("User image updated successfully userId {}", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
