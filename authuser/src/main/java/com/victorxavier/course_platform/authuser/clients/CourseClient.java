@@ -4,7 +4,6 @@ import com.victorxavier.course_platform.authuser.dtos.CourseDTO;
 import com.victorxavier.course_platform.authuser.dtos.ResponsePageDTO;
 import com.victorxavier.course_platform.authuser.services.UtilsService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -33,8 +34,8 @@ public class CourseClient {
     @Value("${course_platform.api.url.course}")
     String REQUEST_URl_COURSE;
 
-    @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
-    @CircuitBreaker(name = "circuitBreakerInstance")
+    // @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
+    @CircuitBreaker(name = "circuitBreakerInstance", fallbackMethod = "circuitbreakerfallback")
     public Page<CourseDTO> getAllCoursesByUser(UUID userId, Pageable pageable) {
         List<CourseDTO> searchResult = null;
         Page<CourseDTO> page = Page.empty(pageable);
@@ -70,6 +71,12 @@ public class CourseClient {
         }
         log.info("Ending request /courses userId {} ", userId);
         return page;
+    }
+
+    public Page<CourseDTO> circuitbreakerfallback(UUID userId, Pageable pageable, Exception ex) {
+        log.error("Circuit Breaker fallback triggered for getAllCoursesByUser. UserId: {}, Cause: {}",
+                userId, ex.getMessage(), ex);
+        return createEmptyPage(pageable);
     }
 
     public Page<CourseDTO> retryFallback(UUID userId, Pageable pageable, Exception ex) {
