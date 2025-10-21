@@ -8,7 +8,6 @@ import com.victorxavier.course_platform.authuser.enums.UserStatus;
 import com.victorxavier.course_platform.authuser.enums.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -78,6 +77,4 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
                 null
         );
     }
-
-
 }
