@@ -1,61 +1,64 @@
-#server:
-#  port: 8082
-#  servlet:
-#    context-path: '/course-platform-course/'
+server:
+  port: 8082
+  servlet:
+    context-path: '/course-platform-course/'
 
 spring:
   application:
     name: course-platform-course-service
   config:
-    import: 'configserver:'
+    import: 'optional:configserver:'
   cloud:
     config:
       discovery:
         service-id: course-platform-config-server
 
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/course-platform-course
-#    username: postgres
-#    password: 299792458
-#    driver-class-name: org.postgresql.Driver
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#        jdbc:
-#          lob.non-contextual-creation: true
-#        show_sql: true
-#        format_sql: true
-#  output:
-#    ansi:
-#      enabled: always
-#  rabbitmq:
-#    addresses: amqps://wemicgbt:w7zguO9YZNVbloAmOq173xzmfay-trtw@chimpanzee.rmq.cloudamqp.com/wemicgbt
-#
-#
-#logging:
-#  level:
-#    com.victorxavier.course_platform: TRACE
-#    root: INFO
-#    org.springframework.web: DEBUG
-#    org.hibernate: INFO
-#
-#course_platform:
-#  api:
-#    url:
-#      authuser: 'http://course-platform-authuser-service/course-platform-authuser'
-#  broker:
-#    exchange:
-#      userEventExchange: course_platform.userevent
-#    queue:
-#      userEventQueue:
-#        name: course_platform.userevent.ms.course
-#
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: 'http://localhost:8761/eureka'
-#  instance:
-#    hostname: localhost
+  datasource:
+    url: jdbc:postgresql://localhost:5432/course-platform-course
+    username: postgres
+    password: 299792458
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob.non-contextual-creation: true
+        show_sql: true
+        format_sql: true
+  output:
+    ansi:
+      enabled: always
+  rabbitmq:
+    addresses: amqps://wemicgbt:w7zguO9YZNVbloAmOq173xzmfay-trtw@chimpanzee.rmq.cloudamqp.com/wemicgbt
+
+
+logging:
+  level:
+    com.victorxavier.course_platform: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+course_platform:
+  api:
+    url:
+      authuser: 'http://course-platform-authuser-service/course-platform-authuser'
+  broker:
+    exchange:
+      userEventExchange: course_platform.userevent
+      notificationCommandExchange: course_platform.notificationcommand
+    queue:
+      userEventQueue:
+        name: course_platform.userevent.ms.course
+    key:
+      notificationCommandKey: ms.notification
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost

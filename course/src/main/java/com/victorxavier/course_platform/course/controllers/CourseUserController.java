@@ -49,8 +49,6 @@ public class CourseUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
         }
 
-        // Verification with state transfer pattern
-
         if (courseService.existsByCourseAndUser(courseId, subscriptionDTO.userId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Error: User already subscribed to this course.");
@@ -66,7 +64,7 @@ public class CourseUserController {
                     .body("Error: User is blocked.");
         }
 
-        courseService.saveSubscriptionUserInCourse(courseId, subscriptionDTO.userId());
+        courseService.saveSubscriptionUserInCourseAndSendNotification(courseModelOptional.get(), userModelOptional.get());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("User subscribed to course successfully.");
     }

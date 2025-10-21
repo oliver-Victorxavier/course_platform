@@ -42,6 +42,17 @@ logging:
     org.hibernate: INFO
 
 
+course_platform:
+  broker:
+    exchange:
+      notificationCommandExchange: course_platform.notificationcommand
+    queue:
+      notificationCommandQueue:
+        name: course_platform.notificationcommand.ms.notification
+    key:
+      notificationCommandKey: ms.notification
+
+
 management:
   endpoints:
     web:

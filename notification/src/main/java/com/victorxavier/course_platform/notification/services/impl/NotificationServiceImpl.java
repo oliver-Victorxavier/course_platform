@@ -1,5 +1,6 @@
 package com.victorxavier.course_platform.notification.services.impl;
 
+import com.victorxavier.course_platform.notification.models.NotificationModel;
 import com.victorxavier.course_platform.notification.repositories.NotificationRepository;
 import com.victorxavier.course_platform.notification.services.NotificationService;
 import org.springframework.stereotype.Service;
@@ -14,4 +15,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
 
+    @Override
+    public NotificationModel saveNotification(NotificationModel notificationModel) {
+        return notificationRepository.save(notificationModel);
+    }
 }
