@@ -21,6 +21,12 @@ spring:
               predicates:
                 - Path=/course-platform-course/**
 
+            - id: notification-service
+              uri: lb://COURSE-PLATFORM-NOTIFICATION-SERVICE
+              predicates:
+                - Path=/course-platform-notification/**
+
+
 
 
 eureka:

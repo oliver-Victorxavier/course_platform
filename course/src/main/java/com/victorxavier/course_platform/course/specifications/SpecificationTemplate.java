@@ -1,7 +1,7 @@
 package com.victorxavier.course_platform.course.specifications;
 
 import com.victorxavier.course_platform.course.models.CourseModel;
-import com.victorxavier.course_platform.course.models.CourseUserModel;
+import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
 import jakarta.persistence.criteria.Expression;
@@ -23,6 +23,14 @@ public class SpecificationTemplate {
             @Spec(path = "courseStatus", spec = Equal.class),
             @Spec(path = "name", spec = Like.class)})
     public interface CourseSpec extends Specification<CourseModel> {}
+
+    @And({
+            @Spec(path = "email", spec = Like.class),
+            @Spec(path = "fullName", spec = Like.class),
+            @Spec(path = "userStatus", spec = Equal.class),
+            @Spec(path = "userType", spec = Equal.class)})
+    public interface UserSpec extends Specification<UserModel> {}
+
 
     @Spec(path = "tittle", spec = Equal.class)
     public interface ModuleSpec extends Specification<ModuleModel> {}
@@ -50,12 +58,21 @@ public class SpecificationTemplate {
         };
     }
 
+    public static Specification<UserModel> userCourseId(final UUID courseId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Join<UserModel, CourseModel> courseJoin = root.join("courses");
+            return cb.equal(courseJoin.get("courseId"), courseId);
+        };
+    }
+
     public static Specification<CourseModel> courseUserId(final UUID userId) {
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<CourseModel, CourseUserModel> courseProd = root.join("coursesUsers");
-            return cb.equal(courseProd.get("userId"), userId);
-
+            Root<CourseModel> course = root;
+            Root<UserModel> user = query.from(UserModel.class);
+            Expression<Collection<CourseModel>> usersCourses = user.get("courses");
+            return cb.and(cb.equal(course.get("userId"), userId), cb.isMember(course, usersCourses));
         };
     }
 

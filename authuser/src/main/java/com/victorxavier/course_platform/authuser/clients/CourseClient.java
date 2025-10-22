@@ -3,6 +3,7 @@ package com.victorxavier.course_platform.authuser.clients;
 import com.victorxavier.course_platform.authuser.dtos.CourseDTO;
 import com.victorxavier.course_platform.authuser.dtos.ResponsePageDTO;
 import com.victorxavier.course_platform.authuser.services.UtilsService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,16 +34,18 @@ public class CourseClient {
     @Value("${course_platform.api.url.course}")
     String REQUEST_URl_COURSE;
 
+    // @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
+    @CircuitBreaker(name = "circuitBreakerInstance", fallbackMethod = "circuitbreakerfallback")
     public Page<CourseDTO> getAllCoursesByUser(UUID userId, Pageable pageable) {
         List<CourseDTO> searchResult = null;
         Page<CourseDTO> page = Page.empty(pageable);
         String url = REQUEST_URl_COURSE + utilsService.createUrl(userId, pageable);
         log.debug("Request URL: {} ", url);
         log.info("Request URL: {} ", url);
+
         try {
             ParameterizedTypeReference<ResponsePageDTO<CourseDTO>> responseType =
                     new ParameterizedTypeReference<ResponsePageDTO<CourseDTO>>() {};
-
             ResponseEntity<ResponsePageDTO<CourseDTO>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
 
             if (result.getBody() != null) {
@@ -57,21 +60,32 @@ public class CourseClient {
                 }
             } else {
                 log.warn("Response body is null for URL: {}", url);
-                page = new PageImpl<>(Collections.emptyList(), pageable, 0);
+                page = createEmptyPage(pageable);
             }
         } catch (HttpStatusCodeException e){
             log.error("Error Request /courses userId {}: Status Code: {}, Body: {}", userId, e.getStatusCode(), e.getResponseBodyAsString(), e);
-            page = new PageImpl<>(Collections.emptyList(), pageable, 0);
+            page = createEmptyPage(pageable);
         } catch (Exception e) {
             log.error("Unexpected error during request /courses userId {}: {}", userId, e.getMessage(), e);
-            page = new PageImpl<>(Collections.emptyList(), pageable, 0);
+            page = createEmptyPage(pageable);
         }
         log.info("Ending request /courses userId {} ", userId);
         return page;
     }
 
-    public void deleteUserInCourse(UUID userId) {
-        String url = REQUEST_URl_COURSE + "/courses/users/" + userId;
-        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
+    public Page<CourseDTO> circuitbreakerfallback(UUID userId, Pageable pageable, Exception ex) {
+        log.error("Circuit Breaker fallback triggered for getAllCoursesByUser. UserId: {}, Cause: {}",
+                userId, ex.getMessage(), ex);
+        return createEmptyPage(pageable);
+    }
+
+    public Page<CourseDTO> retryFallback(UUID userId, Pageable pageable, Exception ex) {
+        log.error("Fallback triggered for getAllCoursesByUser. UserId: {}, Cause: {}",
+                userId, ex.getMessage(), ex);
+        return createEmptyPage(pageable);
+    }
+
+    private Page<CourseDTO> createEmptyPage(Pageable pageable) {
+        return new PageImpl<>(Collections.emptyList(), pageable, 0);
     }
 }
