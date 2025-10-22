@@ -1,70 +1,70 @@
-server:
-  port: 8084
-  servlet:
-    context-path: '/course-platform-notification/'
+#server:
+#  port: 8084
+#  servlet:
+#    context-path: '/course-platform-notification/'
 
 
 spring:
   application:
     name: course-platform-notification-service
   config:
-    import: 'optional:configserver:'
+    import: 'configserver:'
   cloud:
     config:
       discovery:
         service-id: course-platform-config-server
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/course-platform-notification
-    username: postgres
-    password: 299792458
-  jpa:
-    hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-      jbdc:
-        lob.non-contextual-creation: true
-    properties:
-      hibernate:
-        show_sql: true
-  output:
-    ansi:
-      enabled: always
-  rabbitmq:
-    addresses: amqps://wemicgbt:w7zguO9YZNVbloAmOq173xzmfay-trtw@chimpanzee.rmq.cloudamqp.com/wemicgbt
-
-
-logging:
-  level:
-    com.victorxavier.course_platform: TRACE
-    root: INFO
-    org.springframework.web: DEBUG
-    org.hibernate: INFO
-
-
-course_platform:
-  broker:
-    exchange:
-      notificationCommandExchange: course_platform.notificationcommand
-    queue:
-      notificationCommandQueue:
-        name: course_platform.notificationcommand.ms.notification
-    key:
-      notificationCommandKey: ms.notification
-
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include:
-          - refresh
-          - health
-
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: 'http://localhost:8761/eureka'
-  instance:
-    hostname: localhost
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/course-platform-notification
+#    username: postgres
+#    password: 299792458
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
+#      jbdc:
+#        lob.non-contextual-creation: true
+#    properties:
+#      hibernate:
+#        show_sql: true
+#  output:
+#    ansi:
+#      enabled: always
+#  rabbitmq:
+#    addresses: amqps://wemicgbt:w7zguO9YZNVbloAmOq173xzmfay-trtw@chimpanzee.rmq.cloudamqp.com/wemicgbt
+#
+#
+#logging:
+#  level:
+#    com.victorxavier.course_platform: TRACE
+#    root: INFO
+#    org.springframework.web: DEBUG
+#    org.hibernate: INFO
+#
+#
+#course_platform:
+#  broker:
+#    exchange:
+#      notificationCommandExchange: course_platform.notificationcommand
+#    queue:
+#      notificationCommandQueue:
+#        name: course_platform.notificationcommand.ms.notification
+#    key:
+#      notificationCommandKey: ms.notification
+#
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include:
+#          - refresh
+#          - health
+#
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: 'http://localhost:8761/eureka'
+#  instance:
+#    hostname: localhost
