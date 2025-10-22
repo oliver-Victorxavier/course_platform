@@ -1,0 +1,22 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: course-platform-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/oliver-Victorxavier/course_platform-config-server-repo
+          default-label: main
+          username: ${GITHUB_USERNAME}
+          password: ${GITHUB_TOKEN}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost
+

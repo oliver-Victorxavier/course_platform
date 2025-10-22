@@ -1,16 +1,18 @@
 package com.victorxavier.course_platform.course.services.impl;
 
-import com.victorxavier.course_platform.course.clients.AuthUserClient;
+import com.victorxavier.course_platform.course.dto.NotificationCommandDTO;
 import com.victorxavier.course_platform.course.models.CourseModel;
-import com.victorxavier.course_platform.course.models.CourseUserModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
+import com.victorxavier.course_platform.course.models.UserModel;
+import com.victorxavier.course_platform.course.publishers.NotificationCommandPublisher;
 import com.victorxavier.course_platform.course.repositories.CourseRepository;
-import com.victorxavier.course_platform.course.repositories.CourseUserRepository;
 import com.victorxavier.course_platform.course.repositories.LessonRepository;
 import com.victorxavier.course_platform.course.repositories.ModuleRepository;
+import com.victorxavier.course_platform.course.repositories.UserRepository;
 import com.victorxavier.course_platform.course.services.CourseService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@Slf4j
 @Service
 public class CourseServiceImpl implements CourseService {
 
@@ -35,16 +37,14 @@ public class CourseServiceImpl implements CourseService {
     LessonRepository lessonRepository;
 
     @Autowired
-    CourseUserRepository courseUserRepository;
+    UserRepository userRepository;
 
     @Autowired
-    AuthUserClient authUserClient;
-
+    NotificationCommandPublisher notificationCommandPublisher;
 
     @Transactional
     @Override
     public void delete(CourseModel courseModel) {
-        boolean deleteCourseUserInAuthUser = false;
 
         List<ModuleModel> moduleModelList = moduleRepository.findAllLModulesIntoCourse(courseModel.getCourseId());
         if (!moduleModelList.isEmpty()){
@@ -56,15 +56,8 @@ public class CourseServiceImpl implements CourseService {
             }
             moduleRepository.deleteAll(moduleModelList);
         }
-        List<CourseUserModel> courseUserModelList = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
-        if (!courseUserModelList.isEmpty()){
-            courseUserRepository.deleteAll(courseUserModelList);
-            deleteCourseUserInAuthUser = true;
-        }
+        courseRepository.deleteCourseUserByCourse(courseModel.getCourseId());
         courseRepository.delete(courseModel);
-        if (deleteCourseUserInAuthUser){
-            authUserClient.deleteCourseInAuthUser(courseModel.getCourseId());
-        }
     }
 
     @Override
@@ -87,9 +80,27 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.existsByCourseAndUser(courseId, userId);
     }
 
+    @Transactional
     @Override
-    public void saveSubscribedToCourse(UUID courseId, UUID userId) {
+    public void saveSubscriptionUserInCourse(UUID courseId, UUID userId) {
         courseRepository.saveCourseUser(courseId, userId);
+    }
+
+    @Transactional
+    @Override
+    public void saveSubscriptionUserInCourseAndSendNotification(CourseModel course, UserModel userModel) {
+        courseRepository.saveCourseUser(course.getCourseId(), userModel.getUserId());
+
+        try {
+            var notificationCommandDTO = new NotificationCommandDTO(
+                    "Bem-Vindo(a) ao Curso: " + course.getName(),
+                    userModel.getFullName() + " a sua inscrição foi realizada com sucesso!",
+                    userModel.getUserId()
+            );
+            notificationCommandPublisher.publishNotificationCommand(notificationCommandDTO);
+        } catch (Exception e){
+            log.warn("Error sending notification command to user: " + userModel.getUserId());
+        }
     }
 
 
