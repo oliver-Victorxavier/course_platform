@@ -7,12 +7,12 @@ spring:
   application:
     name: course-platform-course-service
   config:
-    import: 'configserver:'
+    import: 'optional:configserver:'
   cloud:
     config:
       discovery:
         service-id: course-platform-config-server
-
+#
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/course-platform-course
 #    username: postgres

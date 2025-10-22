@@ -1,6 +1,6 @@
 package com.victorxavier.course_platform.course.validation;
 
-import com.victorxavier.course_platform.course.dto.CourseDTO;
+import com.victorxavier.course_platform.course.dtos.CourseDTO;
 import com.victorxavier.course_platform.course.enums.UserType;
 import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.services.UserService;

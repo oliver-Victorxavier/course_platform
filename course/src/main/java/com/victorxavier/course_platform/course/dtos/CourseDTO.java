@@ -1,4 +1,4 @@
-package com.victorxavier.course_platform.course.dto;
+package com.victorxavier.course_platform.course.dtos;
 
 import com.victorxavier.course_platform.course.enums.CourseLevel;
 import com.victorxavier.course_platform.course.enums.CourseStatus;

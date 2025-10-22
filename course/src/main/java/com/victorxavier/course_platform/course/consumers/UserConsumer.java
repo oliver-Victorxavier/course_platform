@@ -1,6 +1,6 @@
 package com.victorxavier.course_platform.course.consumers;
 
-import com.victorxavier.course_platform.course.dto.UserEventDTO;
+import com.victorxavier.course_platform.course.dtos.UserEventDTO;
 import com.victorxavier.course_platform.course.enums.ActionType;
 import com.victorxavier.course_platform.course.services.UserService;
 import org.springframework.amqp.core.ExchangeTypes;
