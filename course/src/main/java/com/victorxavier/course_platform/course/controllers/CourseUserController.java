@@ -1,6 +1,6 @@
 package com.victorxavier.course_platform.course.controllers;
 
-import com.victorxavier.course_platform.course.dto.SubscriptionDTO;
+import com.victorxavier.course_platform.course.dtos.SubscriptionDTO;
 import com.victorxavier.course_platform.course.enums.UserStatus;
 import com.victorxavier.course_platform.course.models.CourseModel;
 import com.victorxavier.course_platform.course.models.UserModel;

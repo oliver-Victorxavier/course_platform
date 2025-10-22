@@ -1,6 +1,6 @@
 package com.victorxavier.course_platform.course.controllers;
 
-import com.victorxavier.course_platform.course.dto.CourseDTO;
+import com.victorxavier.course_platform.course.dtos.CourseDTO;
 import com.victorxavier.course_platform.course.models.CourseModel;
 import com.victorxavier.course_platform.course.services.CourseService;
 import com.victorxavier.course_platform.course.specifications.SpecificationTemplate;

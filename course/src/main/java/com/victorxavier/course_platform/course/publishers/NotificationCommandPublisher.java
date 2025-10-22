@@ -1,6 +1,6 @@
 package com.victorxavier.course_platform.course.publishers;
 
-import com.victorxavier.course_platform.course.dto.NotificationCommandDTO;
+import com.victorxavier.course_platform.course.dtos.NotificationCommandDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

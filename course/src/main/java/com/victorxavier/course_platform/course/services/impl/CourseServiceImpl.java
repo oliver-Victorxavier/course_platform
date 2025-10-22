@@ -1,6 +1,6 @@
 package com.victorxavier.course_platform.course.services.impl;
 
-import com.victorxavier.course_platform.course.dto.NotificationCommandDTO;
+import com.victorxavier.course_platform.course.dtos.NotificationCommandDTO;
 import com.victorxavier.course_platform.course.models.CourseModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
@@ -9,7 +9,6 @@ import com.victorxavier.course_platform.course.publishers.NotificationCommandPub
 import com.victorxavier.course_platform.course.repositories.CourseRepository;
 import com.victorxavier.course_platform.course.repositories.LessonRepository;
 import com.victorxavier.course_platform.course.repositories.ModuleRepository;
-import com.victorxavier.course_platform.course.repositories.UserRepository;
 import com.victorxavier.course_platform.course.services.CourseService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +34,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     LessonRepository lessonRepository;
-
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     NotificationCommandPublisher notificationCommandPublisher;
