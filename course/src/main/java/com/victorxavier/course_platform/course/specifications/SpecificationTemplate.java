@@ -69,10 +69,8 @@ public class SpecificationTemplate {
     public static Specification<CourseModel> courseUserId(final UUID userId) {
         return (root, query, cb) -> {
             query.distinct(true);
-            Root<CourseModel> course = root;
-            Root<UserModel> user = query.from(UserModel.class);
-            Expression<Collection<CourseModel>> usersCourses = user.get("courses");
-            return cb.and(cb.equal(course.get("userId"), userId), cb.isMember(course, usersCourses));
+            Join<CourseModel, UserModel> userJoin = root.join("users");
+            return cb.equal(userJoin.get("userId"), userId);
         };
     }
 

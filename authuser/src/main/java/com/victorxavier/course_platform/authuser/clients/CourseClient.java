@@ -11,6 +11,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -36,17 +38,21 @@ public class CourseClient {
 
     // @Retry(name = "retryInstance", fallbackMethod = "retryFallback")
     @CircuitBreaker(name = "circuitBreakerInstance", fallbackMethod = "circuitbreakerfallback")
-    public Page<CourseDTO> getAllCoursesByUser(UUID userId, Pageable pageable) {
+    public Page<CourseDTO> getAllCoursesByUser(UUID userId, Pageable pageable, String token) {
         List<CourseDTO> searchResult = null;
         Page<CourseDTO> page = Page.empty(pageable);
         String url = REQUEST_URl_COURSE + utilsService.createUrl(userId, pageable);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
         log.debug("Request URL: {} ", url);
         log.info("Request URL: {} ", url);
 
         try {
             ParameterizedTypeReference<ResponsePageDTO<CourseDTO>> responseType =
                     new ParameterizedTypeReference<ResponsePageDTO<CourseDTO>>() {};
-            ResponseEntity<ResponsePageDTO<CourseDTO>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
+            ResponseEntity<ResponsePageDTO<CourseDTO>> result = restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
 
             if (result.getBody() != null) {
                 ResponsePageDTO<CourseDTO> responseBody = result.getBody();
@@ -73,13 +79,14 @@ public class CourseClient {
         return page;
     }
 
-    public Page<CourseDTO> circuitbreakerfallback(UUID userId, Pageable pageable, Exception ex) {
+
+    public Page<CourseDTO> circuitbreakerfallback(UUID userId, Pageable pageable, String token, Throwable ex) {
         log.error("Circuit Breaker fallback triggered for getAllCoursesByUser. UserId: {}, Cause: {}",
                 userId, ex.getMessage(), ex);
         return createEmptyPage(pageable);
     }
 
-    public Page<CourseDTO> retryFallback(UUID userId, Pageable pageable, Exception ex) {
+    public Page<CourseDTO> retryFallback(UUID userId, Pageable pageable, String token, Throwable ex) {
         log.error("Fallback triggered for getAllCoursesByUser. UserId: {}, Cause: {}",
                 userId, ex.getMessage(), ex);
         return createEmptyPage(pageable);

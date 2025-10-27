@@ -1,18 +1,23 @@
 package com.victorxavier.course_platform.authuser.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.victorxavier.course_platform.authuser.configs.security.UserDetailsImpl;
 import com.victorxavier.course_platform.authuser.dtos.UserDTO;
 import com.victorxavier.course_platform.authuser.models.UserModel;
 import com.victorxavier.course_platform.authuser.services.UserService;
 import com.victorxavier.course_platform.authuser.specifications.SpecificationTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +38,14 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
                                                        @PageableDefault(page = 0, size = 10, sort = "userId",
-                                                               direction = Sort.Direction.ASC) Pageable pageable) {
+                                                               direction = Sort.Direction.ASC) Pageable pageable,
+                                                       Authentication authentication) {
+        UserDetails userDetails  = (UserDetailsImpl) authentication.getPrincipal();
+        log.info("Authentication  {}", userDetails.getUsername());
         Page<UserModel> userModelPage = userService.findAll(spec, pageable);
 
         if (!userModelPage.isEmpty()) {

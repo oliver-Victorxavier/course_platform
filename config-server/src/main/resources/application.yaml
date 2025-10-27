@@ -13,10 +13,19 @@ spring:
           username: ${GITHUB_USERNAME}
           password: ${GITHUB_TOKEN}
 
+
+course-platform:
+  configserver:
+    username: configserver
+    password: 'course-platform123cs'
+  serviceRegistry:
+    username: serviceRegistry
+    password: 'course-platform123sr'
+
 eureka:
   client:
     serviceUrl:
-      defaultZone: 'http://localhost:8761/eureka'
+      defaultZone: 'http://${course-platform.serviceRegistry.username}:${course-platform.serviceRegistry.password}@localhost:8761/eureka'
   instance:
     hostname: localhost
 
