@@ -70,7 +70,7 @@ public class LessonController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found for this module.");
         }
         var lessonModel = lessonModelOptional.get();
-        lessonModel.setTitle(lessonDTO.tittle());
+        lessonModel.setTitle(lessonDTO.title());
         lessonModel.setDescription(lessonDTO.description());
         lessonModel.setVideoUrl(lessonDTO.videoUrl());
         return ResponseEntity.status(HttpStatus.OK).body(lessonService.save(lessonModel));

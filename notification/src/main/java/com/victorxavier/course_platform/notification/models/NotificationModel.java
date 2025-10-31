@@ -54,6 +54,10 @@ public class NotificationModel implements Serializable {
         return title;
     }
 
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

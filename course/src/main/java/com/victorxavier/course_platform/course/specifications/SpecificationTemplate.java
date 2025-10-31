@@ -32,10 +32,10 @@ public class SpecificationTemplate {
     public interface UserSpec extends Specification<UserModel> {}
 
 
-    @Spec(path = "tittle", spec = Equal.class)
+    @Spec(path = "title", spec = Equal.class)
     public interface ModuleSpec extends Specification<ModuleModel> {}
 
-    @Spec(path = "tittle", spec = Equal.class)
+    @Spec(path = "title", spec = Equal.class)
     public interface LessonSpec extends Specification<LessonModel> {}
 
     public static Specification<ModuleModel> moduleCourseId(final UUID courseId) {
