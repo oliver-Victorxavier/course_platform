@@ -35,7 +35,7 @@ public class AuthenticationJwtFilter extends OncePerRequestFilter {
 
                 String userId = jwtProvider.getSubjectJwt(jwtStr);
                 String rolesStr = jwtProvider.getClaimNameJwt(jwtStr, "roles");
-                log.info("### DEBUG JWT ### UserID: {}", userId); 
+                log.info("### DEBUG JWT ### UserID: {}", userId);
                 log.info("### DEBUG JWT ### RolesStr: {}", rolesStr);
                 UserDetails userDetails = UserDetailsImpl.build(UUID.fromString(userId), rolesStr);
 

@@ -2,10 +2,94 @@ spring:
   application:
     name: course-platform-authuser-service
   config:
-    import: 'configserver:'
+    import:
+      - 'optional:configserver:'
+      - 'optional:classpath:secrets.properties'
   cloud:
     config:
       discovery:
         service-id: course-platform-config-server
       username: configserver
-      password: 'course-platform123cs'
+      password: course-platform123cs
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/course-platform-authuser
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jbdc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: always
+  rabbitmq:
+    addresses: ${RABBITMQ_ADDRESSES}
+
+server:
+  port: 8087
+  servlet:
+    context-path: '/course-platform-authuser/'
+
+logging:
+  level:
+    com.victorxavier.course_platform: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+course_platform:
+  api:
+    url:
+      course: 'http://course-platform-course-service/course-platform-course'
+  broker:
+    exchange:
+      userEvent: course_platform.userevent
+
+authuser:
+  refreshscope:
+    name: Victor Oliveira UPDATE!!!!!!!!
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      circuitBreakerInstance:
+        slidingWindowSize: 30
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 2
+        waitDurationInOpenState: 30s
+        failureRateThreshold: 80
+  retry:
+    instances:
+      retryInstance:
+        max-attempts: 3
+        wait-duration: 5s
+
+course-platform:
+  serviceRegistry:
+    username: serviceRegistry
+    password: 'course-platform123sr'
+  auth:
+    jwtSecret: ${JWT_SECRET}
+    jwtExpirationMs: 14400000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://${course-platform.serviceRegistry.username}:${course-platform.serviceRegistry.password}@localhost:8761/eureka'
+  instance:
+    hostname: localhost

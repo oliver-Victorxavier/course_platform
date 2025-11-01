@@ -2,10 +2,76 @@ spring:
   application:
     name: course-platform-course-service
   config:
-    import: 'configserver:'
+    import:
+      - 'optional:configserver:'
+      - 'optional:classpath:secrets.properties'
   cloud:
     config:
       discovery:
         service-id: course-platform-config-server
       username: configserver
-      password: 'course-platform123cs'
+      password: course-platform123cs
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/course-platform-course
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob.non-contextual-creation: true
+        show_sql: true
+        format_sql: true
+  output:
+    ansi:
+      enabled: always
+  rabbitmq:
+    addresses: ${RABBITMQ_ADDRESSES}
+
+server:
+  port: 8082
+  servlet:
+    context-path: '/course-platform-course/'
+
+logging:
+  level:
+    com.victorxavier.course_platform: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+
+course_platform:
+  api:
+    url:
+      authuser: 'http://course-platform-authuser-service/course-platform-authuser'
+  broker:
+    exchange:
+      userEventExchange: course_platform.userevent
+      notificationCommandExchange: course_platform.notificationcommand
+    queue:
+      userEventQueue:
+        name: course_platform.userevent.ms.course
+    key:
+      notificationCommandKey: ms.notification
+
+
+course-platform:
+  serviceRegistry:
+    username: serviceRegistry
+    password: 'course-platform123sr'
+  auth:
+    jwtSecret: ${JWT_SECRET}
+    jwtExpirationMs: 14400000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://${course-platform.serviceRegistry.username}:${course-platform.serviceRegistry.password}@localhost:8761/eureka'
+  instance:
+    hostname: localhost

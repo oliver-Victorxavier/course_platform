@@ -2,10 +2,77 @@ spring:
   application:
     name: course-platform-notification-service
   config:
-    import: 'configserver:'
+    import:
+      - 'optional:configserver:'
+      - 'optional:classpath:secrets.properties'
   cloud:
     config:
       discovery:
         service-id: course-platform-config-server
       username: configserver
-      password: 'course-platform123cs'
+      password: course-platform123cs
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/course-platform-notification
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jbdc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: always
+  rabbitmq:
+    addresses: ${RABBITMQ_ADDRESSES}
+
+server:
+  port: 8084
+  servlet:
+    context-path: '/course-platform-notification/'
+
+logging:
+  level:
+    com.victorxavier.course_platform: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
+
+course_platform:
+  broker:
+    exchange:
+      notificationCommandExchange: course_platform.notificationcommand
+    queue:
+      notificationCommandQueue:
+        name: course_platform.notificationcommand.ms.notification
+    key:
+      notificationCommandKey: ms.notification
+
+
+course-platform:
+  serviceRegistry:
+    username: serviceRegistry
+    password: 'course-platform123sr'
+  auth:
+    jwtSecret: ${JWT_SECRET}
+    jwtExpirationMs: 14400000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://${course-platform.serviceRegistry.username}:${course-platform.serviceRegistry.password}@localhost:8761/eureka'
+  instance:
+    hostname: localhost
