@@ -1,0 +1,1020 @@
+type: collection.insomnia.rest/5.0
+name: Course Platform - Microservices API
+meta:
+  id: wrk_5628ad50bddf4a5ab28bca1f32ccf2f3
+  created: 1762194541921
+  modified: 1762194541921
+  description: ""
+collection:
+  - name: 📁 authuser-service (Port 8087)
+    meta:
+      id: fld_c49756e690054a8d9b277211b0e5487e
+      created: 1730677801000
+      modified: 1730677801000
+      sortKey: -100
+      description: ""
+    children:
+      - name: Authentication
+        meta:
+          id: fld_eccc3d8ae127493d90ae96582c55d1fb
+          created: 1730677802000
+          modified: 1730677802000
+          sortKey: -100
+          description: ""
+        children:
+          - url: "{{ base_url_authuser }}/auth/signup"
+            name: "[Auth] Register User (Signup)"
+            meta:
+              id: req_f5dc89a148fe425bb6ccd5bc20b40bb8
+              created: 1730677803000
+              modified: 1730677803000
+              isPrivate: false
+              description: ""
+              sortKey: -100
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"username": "teststudent",
+                	"password": "Password123!",
+                	"email": "student@test.com",
+                	"fullName": "Test Student User",
+                	"phoneNumber": "11988776655",
+                	"cpf": "12345678900"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/auth/login"
+            name: "[Auth] Login"
+            meta:
+              id: req_82d2114ff16843239396d5a1f9d7f839
+              created: 1730677804000
+              modified: 1730677804000
+              isPrivate: false
+              description: ""
+              sortKey: -50
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"username": "teststudent",
+                	"password": "Password123!"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/auth/"
+            name: "[Auth] Logging Test"
+            meta:
+              id: req_14cf9fdd91544d62aaea5ad5a43bf006
+              created: 1730677805000
+              modified: 1730677805000
+              isPrivate: false
+              description: ""
+              sortKey: 0
+            method: GET
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Users
+        meta:
+          id: fld_b00315380e434ee6857ac79f8baec003
+          created: 1730677806000
+          modified: 1730677806000
+          sortKey: -50
+          description: ""
+        children:
+          - url: "{{ base_url_authuser }}/users"
+            name: "[User] Get All Users (ADMIN, STUDENT)"
+            meta:
+              id: req_c9d377e9ba0e4fe4bce6a498c75ac780
+              created: 1730677807000
+              modified: 1730677807000
+              isPrivate: false
+              description: ""
+              sortKey: -100
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/users/{{ userId }}"
+            name: "[User] Get One User"
+            meta:
+              id: req_ef8cdb1bd18c46108c11e6012bc888ad
+              created: 1730677808000
+              modified: 1730677808000
+              isPrivate: false
+              description: ""
+              sortKey: -90
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/users/{{ userId }}"
+            name: "[User] Update User"
+            meta:
+              id: req_ba40a1c36e8442b69f41e709cda8ad18
+              created: 1730677809000
+              modified: 1730677809000
+              isPrivate: false
+              description: ""
+              sortKey: -80
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"fullName": "Test Student Updated",
+                	"phoneNumber": "11999999999",
+                	"cpf": "09876543211"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/users/{{ userId }}/password"
+            name: "[User] Update Password"
+            meta:
+              id: req_6e2f10925a0b4d76a67fffcadd7b78ab
+              created: 1730677810000
+              modified: 1730677810000
+              isPrivate: false
+              description: ""
+              sortKey: -70
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"oldPassword": "Password123!",
+                	"password": "NewPassword456!"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/users/{{ userId }}/image"
+            name: "[User] Update Image"
+            meta:
+              id: req_e27dddfe41574f61aa44daf85a8478b1
+              created: 1730677811000
+              modified: 1730677811000
+              isPrivate: false
+              description: ""
+              sortKey: -60
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"imageUrl": "http://example.com/new-image.png"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_authuser }}/users/{{ userId }}"
+            name: "[User] Delete User"
+            meta:
+              id: req_a3a564d1587e4fcc9642d2e97e533622
+              created: 1730677812000
+              modified: 1730677812000
+              isPrivate: false
+              description: ""
+              sortKey: -50
+            method: DELETE
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: User Courses
+        meta:
+          id: fld_e807645e684841379bf9115bc9852d99
+          created: 1730677813000
+          modified: 1730677813000
+          sortKey: 0
+          description: ""
+        children:
+          - url: "{{ base_url_authuser }}/users/{{ userId }}/courses"
+            name: "[User-Course] Get All Courses by User (STUDENT)"
+            meta:
+              id: req_a4b1d7a489c841948bfe1ded3ae0ffb0
+              created: 1730677814000
+              modified: 1730677814000
+              isPrivate: false
+              description: ""
+              sortKey: -100
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Instructors (Inferred)
+        meta:
+          id: fld_f4b2840f5d9341039dd3c3beaa255c88
+          created: 1730677815000
+          modified: 1730677815000
+          sortKey: 50
+          description: Endpoints inferidos pois o 'InstructorController.java' não foi
+            fornecido.
+        children:
+          - url: "{{ base_url_authuser }}/instructors/subscription"
+            name: "[Instructor] Become Instructor (Inferred)"
+            meta:
+              id: req_7b58e90f84d44ff9b198d841593cae14
+              created: 1730677816000
+              modified: 1730677816000
+              isPrivate: false
+              description: >-
+                Endpoint inferido. O 'InstructorController.java' e
+                'InstructorDTO.java' não foram fornecidos.
+
+                O payload é uma suposição.
+              sortKey: -100
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"userId": "{{ userId }}"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+  - name: 📁 course-service (Port 8082)
+    meta:
+      id: fld_1132e79f4b7f498f9e73cc41927dd4fb
+      created: 1730677817000
+      modified: 1730677817000
+      sortKey: 0
+      description: ""
+    children:
+      - name: Courses
+        meta:
+          id: fld_b75f5f4223734f8fa68afb65864eb772
+          created: 1730677818000
+          modified: 1730677818000
+          sortKey: -100
+          description: ""
+        children:
+          - url: "{{ base_url_course }}/courses"
+            name: "[Course] Save Course (INSTRUCTOR)"
+            meta:
+              id: req_c5519cd10bab4d199950b8d78b87d67c
+              created: 1730677819000
+              modified: 1730677819000
+              isPrivate: false
+              description: >-
+                Requer role de INSTRUCTOR. 
+
+                Após registrar-se, altere manualmente a role do usuário no DB
+                para 'ROLE_INSTRUCTOR' e faça login novamente para obter um
+                token válido.
+
+                Certifique-se que a variável 'instructorId' contém o UUID do seu
+                usuário instrutor.
+              sortKey: -100
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"name": "Complete Spring Boot Course",
+                	"description": "From zero to hero in Spring Boot",
+                	"imageUrl": "http://example.com/spring.png",
+                	"userInstructor": "{{ instructorId }}",
+                	"courseStatus": "IN_PROGRESS",
+                	"courseLevel": "BEGINNER"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses"
+            name: "[Course] Get All Courses (STUDENT)"
+            meta:
+              id: req_675981e1869241098b68fdc8b4884295
+              created: 1730677820000
+              modified: 1730677820000
+              isPrivate: false
+              description: ""
+              sortKey: -90
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses"
+            name: "[Course] Get All Courses (Filter by User)"
+            meta:
+              id: req_ed49a19922734485be8a970145c88fce
+              created: 1730677821000
+              modified: 1730677821000
+              isPrivate: false
+              description: ""
+              sortKey: -85
+            method: GET
+            parameters:
+              - id: pair_1
+                name: userId
+                value: "{{ userId }}"
+                description: ""
+                disabled: false
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}"
+            name: "[Course] Get One Course (STUDENT)"
+            meta:
+              id: req_dee8aabbdae54c7caf4eb3803d6afcfc
+              created: 1730677822000
+              modified: 1730677822000
+              isPrivate: false
+              description: ""
+              sortKey: -80
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}"
+            name: "[Course] Update Course (INSTRUCTOR)"
+            meta:
+              id: req_9cdcae0142ff4478a4278dac28af4c63
+              created: 1730677823000
+              modified: 1730677823000
+              isPrivate: false
+              description: Requer role de INSTRUCTOR.
+              sortKey: -70
+            method: PUT
+            body:
+              mimeType: application/json
+              text: >-
+                {
+                	"name": "Complete Spring Boot Course (Updated)",
+                	"description": "From zero to hero in Spring Boot and Microservices",
+                	"imageUrl": "http://example.com/spring-updated.png",
+                	"userInstructor": "{{ instructorId }}",
+                	"courseStatus": "IN_PROGRESS",
+                	"courseLevel": "INTERMEDIATE"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}"
+            name: "[Course] Delete Course (INSTRUCTOR)"
+            meta:
+              id: req_38f7e7b88a26490c8db056836b43a753
+              created: 1730677824000
+              modified: 1730677824000
+              isPrivate: false
+              description: Requer role de INSTRUCTOR.
+              sortKey: -60
+            method: DELETE
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Course Users
+        meta:
+          id: fld_d5cdcac7e2e14b04afbeb5b09bbfba59
+          created: 1730677825000
+          modified: 1730677825000
+          sortKey: -50
+          description: ""
+        children:
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/users/subscription"
+            name: "[Course-User] Subscribe User to Course"
+            meta:
+              id: req_a3c1d6b9fa2f4c3ca07940a9d275ba65
+              created: 1730677826000
+              modified: 1730677826000
+              isPrivate: false
+              description: ""
+              sortKey: -100
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"userId": "{{ userId }}"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/users"
+            name: "[Course-User] Get All Users by Course"
+            meta:
+              id: req_55b9178a346841d9a5b95930d877713d
+              created: 1730677827000
+              modified: 1730677827000
+              isPrivate: false
+              description: ""
+              sortKey: -90
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Modules (Inferred)
+        meta:
+          id: fld_d843a351dac54625bb27485c9ea608b5
+          created: 1730677828000
+          modified: 1730677828000
+          sortKey: 0
+          description: Endpoints inferidos pois o 'ModuleController.java' não foi fornecido.
+        children:
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/modules"
+            name: "[Module] Create Module (Inferred)"
+            meta:
+              id: req_37be42f905514002b32a7c77823f1240
+              created: 1730677829000
+              modified: 1730677829000
+              isPrivate: false
+              description: >-
+                Endpoint inferido. 'ModuleController.java' e 'ModuleDTO.java'
+                não foram fornecidos.
+
+                O payload é uma suposição.
+              sortKey: -100
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"title": "Module 1: Introduction",
+                	"description": "Getting started with the course"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/modules"
+            name: "[Module] Get All Modules for Course (Inferred)"
+            meta:
+              id: req_2649f9d07e1f413c8a953fd26f901024
+              created: 1730677830000
+              modified: 1730677830000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -90
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/modules/{{ moduleId }}"
+            name: "[Module] Get One Module (Inferred)"
+            meta:
+              id: req_5a090293fb5e48d4bdc0c44a161efe11
+              created: 1730677831000
+              modified: 1730677831000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -80
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/modules/{{ moduleId }}"
+            name: "[Module] Update Module (Inferred)"
+            meta:
+              id: req_513e64a939414b97be87853c8a64f541
+              created: 1730677832000
+              modified: 1730677832000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -70
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"title": "Module 1 (Updated)",
+                	"description": "Updated description"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/courses/{{ courseId }}/modules/{{ moduleId }}"
+            name: "[Module] Delete Module (Inferred)"
+            meta:
+              id: req_118d1e68f1ad48ceaa140212e4684739
+              created: 1730677833000
+              modified: 1730677833000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -60
+            method: DELETE
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Lessons (Inferred)
+        meta:
+          id: fld_06762e301b33406aa05184a5f5206ac3
+          created: 1730677834000
+          modified: 1730677834000
+          sortKey: 50
+          description: Endpoints inferidos pois o 'LessonController.java' não foi fornecido.
+        children:
+          - url: "{{ base_url_course }}/modules/{{ moduleId }}/lessons"
+            name: "[Lesson] Create Lesson (Inferred)"
+            meta:
+              id: req_3f62a0c1123c446ba8fffad4791356b2
+              created: 1730677835000
+              modified: 1730677835000
+              isPrivate: false
+              description: >-
+                Endpoint inferido. 'LessonController.java' e 'LessonDTO.java'
+                não foram fornecidos.
+
+                O payload é uma suposição.
+              sortKey: -100
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"title": "Lesson 1: Hello World",
+                	"description": "Our first application",
+                	"videoUrl": "http://youtube.com/watch?v=123"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/modules/{{ moduleId }}/lessons"
+            name: "[Lesson] Get All Lessons for Module (Inferred)"
+            meta:
+              id: req_5b7466fcf0e04250ad64977b4c3aff94
+              created: 1730677836000
+              modified: 1730677836000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -90
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/modules/{{ moduleId }}/lessons/{{ lessonId }}"
+            name: "[Lesson] Get One Lesson (Inferred)"
+            meta:
+              id: req_b5fce9adb8a34cbeaedf976a3fd9ebe7
+              created: 1730677837000
+              modified: 1730677837000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -80
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/modules/{{ moduleId }}/lessons/{{ lessonId }}"
+            name: "[Lesson] Update Lesson (Inferred)"
+            meta:
+              id: req_e4de850e2d0d4f339ca123b89b3fb9d9
+              created: 1730677838000
+              modified: 1730677838000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -70
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"title": "Lesson 1 (Updated)",
+                	"description": "Updated description",
+                	"videoUrl": "http://youtube.com/watch?v=456"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_course }}/modules/{{ moduleId }}/lessons/{{ lessonId }}"
+            name: "[Lesson] Delete Lesson (Inferred)"
+            meta:
+              id: req_5c34e016e1f64e2e9e44d2c3bd2a5eeb
+              created: 1730677839000
+              modified: 1730677839000
+              isPrivate: false
+              description: Endpoint inferido.
+              sortKey: -60
+            method: DELETE
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+  - name: 📁 notification-service (Port 8084)
+    meta:
+      id: fld_a7b4dfd5422a4ceebbb1c77889a93bde
+      created: 1730677840000
+      modified: 1730677840000
+      sortKey: 100
+      description: ""
+    children:
+      - name: User Notifications
+        meta:
+          id: fld_589fc4cb2b0a48d6a58d1b3bdee149ce
+          created: 1730677841000
+          modified: 1730677841000
+          sortKey: -100
+          description: ""
+        children:
+          - url: "{{ base_url_notification }}/users/{{ userId }}/notifications"
+            name: "[Notification] Get All Notifications by User (STUDENT)"
+            meta:
+              id: req_7d68ae92d4de4d60bba032cd7ca857cc
+              created: 1730677842000
+              modified: 1730677842000
+              isPrivate: false
+              description: ""
+              sortKey: -100
+            method: GET
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ base_url_notification }}/users/{{ userId }}/notifications/{{
+              notificationId }}"
+            name: "[Notification] Update Notification Status (STUDENT)"
+            meta:
+              id: req_d4aec806c6c447ce84c4ce1854d4bc86
+              created: 1730677843000
+              modified: 1730677843000
+              isPrivate: false
+              description: ""
+              sortKey: -90
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"notificationStatus": "READ"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            authentication:
+              type: bearer
+              token: "{{ jwt_token }}"
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+  - name: 📁 config-server (Port 8888)
+    meta:
+      id: fld_13aa28291f354cc4960799f6389a1a97
+      created: 1762194647976
+      modified: 1762194647975
+      sortKey: 150
+      description: ""
+    children:
+      - name: config-server
+        meta:
+          id: fld_47eec550846d48e1b587a9b274954cc2
+          created: 1762194647984
+          modified: 1762194769344
+          sortKey: -100
+          description: ""
+        children:
+          - url: http://localhost:8888/course-platform-authuser/refreshscope
+            name: Get refresh
+            meta:
+              id: req_57992a64d43442a58164a2321449ab00
+              created: 1762194828501
+              modified: 1762195208654
+              isPrivate: false
+              description: ""
+              sortKey: -1762194828501
+            method: GET
+            authentication:
+              type: basic
+              useISO88591: false
+              disabled: false
+              username: configserver
+              password: course-platform123cs
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: http://localhost:8888/course-platform-notification-service/main
+            name: Get yaml
+            meta:
+              id: req_27ad2c76a3304b919e749aa271392938
+              created: 1762194967568
+              modified: 1762195103102
+              isPrivate: false
+              description: ""
+              sortKey: -1762194967568
+            method: GET
+            headers:
+              - name: Authorization
+                value: Basic Y29uZmlnc2VydmVyOmNvdXJzZS1wbGF0Zm9ybTEyM2Nz
+              - name: User-Agent
+                value: insomnia/11.6.1
+              - name: Cookie
+                value: JSESSIONID=85AA0372A4DC7382CCEDA92EA6EC2567
+            authentication:
+              type: basic
+              useISO88591: false
+              disabled: false
+              username: configserver
+              password: course-platform123cs
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e2e7bcb782bb80565796a0f051b7309fdd63ecd9
+    created: 1762194541987
+    modified: 1762194541987
+environments:
+  name: Base Environment
+  meta:
+    id: env_8574976ea4724545af756f79754e9393
+    created: 1730677800000
+    modified: 1730677800000
+    isPrivate: false
+  data:
+    base_url_authuser: http://localhost:8087
+    base_url_course: http://localhost:8082
+    base_url_notification: http://localhost:8084
+    jwt_token: ""
+    userId: ""
+    instructorId: ""
+    courseId: ""
+    moduleId: ""
+    lessonId: ""
+    notificationId: ""
