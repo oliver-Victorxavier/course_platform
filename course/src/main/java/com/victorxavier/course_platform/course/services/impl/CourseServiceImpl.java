@@ -1,6 +1,7 @@
 package com.victorxavier.course_platform.course.services.impl;
 
 import com.victorxavier.course_platform.course.dtos.NotificationCommandDTO;
+import com.victorxavier.course_platform.course.exception.ResourceNotFoundException;
 import com.victorxavier.course_platform.course.models.CourseModel;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
@@ -19,7 +20,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -42,7 +42,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void delete(CourseModel courseModel) {
 
-        List<ModuleModel> moduleModelList = moduleRepository.findAllLModulesIntoCourse(courseModel.getCourseId());
+        List<ModuleModel> moduleModelList = moduleRepository.findAllModulesIntoCourse(courseModel.getCourseId());
         if (!moduleModelList.isEmpty()){
             for(ModuleModel module : moduleModelList){
                 List<LessonModel> lessonModelList = lessonRepository.findAllLessonsIntoModule(module.getModuleId());
@@ -62,8 +62,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Optional<CourseModel> findById(UUID courseId) {
-        return courseRepository.findById(courseId);
+    public CourseModel findById(UUID courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Course with ID %s not found", courseId)));
     }
 
     @Override

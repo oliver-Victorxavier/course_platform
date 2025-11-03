@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -38,47 +37,44 @@ public class CourseController {
 
     @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @PostMapping
-    public ResponseEntity<Object> saveCourse(@RequestBody CourseDTO courseDTO, Errors errors) {
+    public ResponseEntity<Object> saveCourse(@RequestBody @Valid CourseDTO courseDTO, Errors errors) {
         log.debug("POST saveCourse courseDTO received {} ", courseDTO.toString());
-        courseValidator.validate(courseDTO, errors);
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
-        }
-
         var courseModel = new CourseModel();
         BeanUtils.copyProperties(courseDTO, courseModel);
         courseModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         courseModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.save(courseModel));
+
+        courseService.save(courseModel);
+        log.debug("POST saveCourse courseId saved {}", courseModel.getCourseId());
+        log.info("Course saved successfully courseId {}", courseModel.getCourseId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseModel);
     }
 
     @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @DeleteMapping("/{courseId}")
     public ResponseEntity<Object> deleteCourse(@PathVariable(value = "courseId") UUID courseId) {
-        Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
-        if (!courseModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
-        }
-        courseService.delete(courseModelOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Course deleted sucessfully.");
+        log.debug("DELETE deleteCourse courseId received {}", courseId);
+        CourseModel courseModel = courseService.findById(courseId);
+        courseService.delete(courseModel);
+
+        log.debug("DELETE deleteCourse courseId deleted {}", courseId);
+        log.info("Course deleted successfully courseId {}", courseId);
+        return ResponseEntity.ok("Course deleted successfully");
     }
 
     @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @PutMapping("/{courseId}")
     public ResponseEntity<Object> updateCourse(@PathVariable(value = "courseId") UUID courseId,
                                                @RequestBody @Valid CourseDTO courseDTO) {
-        Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
-        if (!courseModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
-        }
-        var courseModel = courseModelOptional.get();
-        courseModel.setName(courseDTO.name());
-        courseModel.setDescription(courseDTO.description());
-        courseModel.setImageUrl(courseDTO.imageUrl());
-        courseModel.setCourseStatus(courseDTO.courseStatus());
-        courseModel.setCourseLevel(courseDTO.courseLevel());
+        log.debug("PUT updateCourse courseDTO received {}", courseDTO.toString());
+        CourseModel courseModel = courseService.findById(courseId);
+        BeanUtils.copyProperties(courseDTO, courseModel);
         courseModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.save(courseModel));
+
+        courseService.save(courseModel);
+        log.debug("PUT updateCourse courseId saved {}", courseModel.getCourseId());
+        log.info("Course updated successfully courseId {}", courseModel.getCourseId());
+        return ResponseEntity.ok(courseModel);
     }
 
     @PreAuthorize("hasAnyRole('STUDENT')")
@@ -98,10 +94,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('STUDENT')")
     @GetMapping("/{courseId}")
     public ResponseEntity<Object> getOneCourse(@PathVariable(value = "courseId") UUID courseId) {
-        Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
-        if (!courseModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(courseModelOptional.get());
+        CourseModel courseModel = courseService.findById(courseId);
+        return ResponseEntity.ok(courseModel);
     }
 }

@@ -8,7 +8,6 @@ import com.victorxavier.course_platform.authuser.dtos.UserDTO;
 import com.victorxavier.course_platform.authuser.enums.RoleType;
 import com.victorxavier.course_platform.authuser.enums.UserStatus;
 import com.victorxavier.course_platform.authuser.enums.UserType;
-import com.victorxavier.course_platform.authuser.models.RoleModel;
 import com.victorxavier.course_platform.authuser.models.UserModel;
 import com.victorxavier.course_platform.authuser.services.RoleService;
 import com.victorxavier.course_platform.authuser.services.UserService;
@@ -23,7 +22,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,33 +52,25 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDTO.UserView.RegistrationPost.class)
-                                                   @JsonView(UserDTO.UserView.RegistrationPost.class)
-                                               UserDTO userDTO) {
-        log.debug("POST registerUser userDTO received {}", userDTO.toString());
-        if (userService.existsByUsername(userDTO.username())){
-            log.warn("Username {} is already taken", userDTO.username());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already in use");
-        }
-        if (userService.existsByEmail(userDTO.email())){
-            log.warn("Email {} is already taken", userDTO.email());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
-        }
+    public ResponseEntity<Object> registerUser(@RequestBody
+                                               @Validated(UserDTO.UserView.RegistrationPost.class)
+                                               @JsonView(UserDTO.UserView.RegistrationPost.class) UserDTO userDto) {
 
-        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_STUDENT)
-                .orElseThrow(() -> new RuntimeException("Error: Role Is Not Found."));
+        log.debug("POST registerUser userDto received {}", userDto.toString());
+        var roleModel = roleService.findByRoleName(RoleType.ROLE_STUDENT)
+                .orElseThrow(() -> new RuntimeException("Error: Role is Not Found."));
 
         var userModel = new UserModel();
-        BeanUtils.copyProperties(userDTO, userModel);
-        userModel.setPassword(passwordEncoder.encode(userDTO.password()));
+        BeanUtils.copyProperties(userDto, userModel);
         userModel.setUserStatus(UserStatus.ACTIVE);
         userModel.setUserType(UserType.STUDENT);
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.getRoles().add(roleModel);
         userService.saveUser(userModel);
+
         log.debug("POST registerUser userId saved {}", userModel.getUserId());
-        log.info("User saved sucessfully userId {} ", userModel.getUserId());
+        log.info("User saved successfully userId {}", userModel.getUserId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
     }

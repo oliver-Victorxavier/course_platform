@@ -48,7 +48,7 @@ public class SpecificationTemplate {
         };
     }
 
-    public static Specification<LessonModel> lessonModeleId(final UUID moduleId) {
+    public static Specification<LessonModel> lessonModuleId(final UUID moduleId) {
         return (root, query, cb) -> {
             query.distinct(true);
             Root<LessonModel> lesson = root;

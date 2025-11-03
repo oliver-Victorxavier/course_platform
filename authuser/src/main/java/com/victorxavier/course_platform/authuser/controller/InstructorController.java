@@ -1,9 +1,7 @@
 package com.victorxavier.course_platform.authuser.controller;
 
 import com.victorxavier.course_platform.authuser.dtos.InstructorDTO;
-import com.victorxavier.course_platform.authuser.enums.RoleType;
 import com.victorxavier.course_platform.authuser.enums.UserType;
-import com.victorxavier.course_platform.authuser.models.RoleModel;
 import com.victorxavier.course_platform.authuser.models.UserModel;
 import com.victorxavier.course_platform.authuser.services.RoleService;
 import com.victorxavier.course_platform.authuser.services.UserService;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -39,19 +36,20 @@ public class InstructorController {
     @PostMapping("/subscription")
     public ResponseEntity<Object> saveSubscriptionInstructor(@RequestBody @Valid InstructorDTO instructorDTO) {
 
-        Optional<UserModel> userModelOptional = userService.findById(instructorDTO.userId());
-        if (!userModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } else {
-            RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_INSTRUCTOR)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is Not found."));
-            var userModel = userModelOptional.get();
-            userModel.setUserType(UserType.INSTRUCTOR);
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userModel.getRoles().add(roleModel);
-            userService.updateUser(userModel);
+        log.debug("POST saveSubscription instructorDTO received {}", instructorDTO.toString());
+        UserModel userModel = userService.findById(instructorDTO.userId());
 
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
+        if(userModel.getUserType().equals(UserType.INSTRUCTOR)){
+            throw new IllegalArgumentException("User is already an Instructor!");
         }
+        userModel.setUserType(UserType.INSTRUCTOR);
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.updateUser(userModel);
+
+        log.debug("POST saveSubscription userId saved {}", userModel.getUserId());
+        log.info("User updated successfully userId {}", userModel.getUserId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(userModel);
     }
+
 }

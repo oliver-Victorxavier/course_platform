@@ -1,5 +1,6 @@
 package com.victorxavier.course_platform.course.services.impl;
 
+import com.victorxavier.course_platform.course.exception.ResourceNotFoundException;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.models.ModuleModel;
 import com.victorxavier.course_platform.course.repositories.LessonRepository;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -56,19 +56,22 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public Optional<ModuleModel> findModuleIntoCourse(UUID courseId, UUID moduleId) {
-        return moduleRepository.findModuleIntoCourse(courseId, moduleId);
+    public ModuleModel findModuleIntoCourse(UUID courseId, UUID moduleId) {
+        return moduleRepository.findModuleIntoCourse(courseId, moduleId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Module with ID %s not found for course %s", moduleId, courseId)
+                ));
     }
 
     @Override
     public List<ModuleModel> findAllByCourseId(UUID courseId) {
-        return moduleRepository.findAllLModulesIntoCourse(courseId);
+        return moduleRepository.findAllModulesIntoCourse(courseId);
     }
 
     @Override
-    public Optional<ModuleModel> findById(UUID moduleId) {
-        return moduleRepository.findById(moduleId);
-
+    public ModuleModel findById(UUID moduleId) {
+        return moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Module with ID %s not found", moduleId)));
     }
 
     @Override

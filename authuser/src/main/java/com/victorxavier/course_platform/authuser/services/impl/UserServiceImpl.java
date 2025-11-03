@@ -1,6 +1,8 @@
 package com.victorxavier.course_platform.authuser.services.impl;
 
 import com.victorxavier.course_platform.authuser.enums.ActionType;
+import com.victorxavier.course_platform.authuser.exception.DataConflictException;
+import com.victorxavier.course_platform.authuser.exception.ResourceNotFoundException;
 import com.victorxavier.course_platform.authuser.models.UserModel;
 import com.victorxavier.course_platform.authuser.publishers.UserEventPublisher;
 import com.victorxavier.course_platform.authuser.repositories.UserRepository;
@@ -13,7 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,8 +33,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserModel> findById(UUID userId) {
-        return userRepository.findById(userId);
+    public UserModel findById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with ID %s not found.", userId)));
     }
 
     @Transactional
@@ -66,6 +68,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserModel saveUser(UserModel userModel) {
+
+        if (userRepository.existsByUsername(userModel.getUsername())) {
+            throw new DataConflictException(String.format("Username '%s' is already in use", userModel.getUsername()));
+        }
+        if (userRepository.existsByEmail(userModel.getEmail())) {
+            throw new DataConflictException(String.format("Email '%s' is already in use", userModel.getEmail()));
+        }
 
         userModel = save(userModel);
         userEventPublisher.publishUserEvent(userModel.convertToUserEventDTO(), ActionType.CREATE);

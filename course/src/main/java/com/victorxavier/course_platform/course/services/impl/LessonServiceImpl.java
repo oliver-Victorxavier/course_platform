@@ -1,5 +1,6 @@
 package com.victorxavier.course_platform.course.services.impl;
 
+import com.victorxavier.course_platform.course.exception.ResourceNotFoundException;
 import com.victorxavier.course_platform.course.models.LessonModel;
 import com.victorxavier.course_platform.course.repositories.LessonRepository;
 import com.victorxavier.course_platform.course.services.LessonService;
@@ -10,7 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,8 +25,11 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId) {
-        return lessonRepository.findLessonIntoModule(moduleId, lessonId);
+    public LessonModel findLessonIntoModule(UUID moduleId, UUID lessonId) {
+        return lessonRepository.findLessonIntoModule(moduleId, lessonId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Lesson with ID %s not found for module %s", lessonId, moduleId)
+                ));
     }
 
     @Override

@@ -8,12 +8,10 @@ import com.victorxavier.course_platform.authuser.services.UserService;
 import com.victorxavier.course_platform.authuser.specifications.SpecificationTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -59,95 +56,70 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
-        log.debug("GET getOneUser userId received {}", userId);
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            log.warn("User not found userId {}", userId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } else {
-            log.debug("GET getOneUser userModel found {}", userModelOptional.get());
-            log.info("User retrieved successfully userId {}", userId);
-            return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
-        }
+    public ResponseEntity<UserModel> getOneUser(@PathVariable(value = "userId") UUID userId) {
+        UserModel userModel = userService.findById(userId);
+        return ResponseEntity.ok(userModel);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "userId") UUID userId) {
         log.debug("DELETE deleteUser userId received {}", userId);
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } else {
-            userService.deleteUser(userModelOptional.get());
-            log.debug("DELETE deleteUser userId saved {}", userId);
-            log.info("User deleted sucessfully userId {} ", userId);
-            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
-        }
+        UserModel userModel = userService.findById(userId);
+        userService.deleteUser(userModel);
+
+        log.debug("DELETE deleteUser userId deleted {}", userId);
+        log.info("User deleted successfully userId {}", userId);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
                                              @RequestBody @Validated(UserDTO.UserView.UserPut.class)
-                                             @JsonView(UserDTO.UserView.UserPut.class) UserDTO userDto) {
-        log.debug("PUT updateUser userDTO received {}", userDto.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setFullName(userDto.fullName());
-            userModel.setPhoneNumber(userDto.phoneNumber());
-            userModel.setCpf(userDto.cpf());
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.updateUser(userModel);
-            log.debug("PUT updateUser userId saved {}", userModel.getUserId());
-            log.debug("User updated sucessfully userId {}", userModel.getUserId());
+                                             @JsonView(UserDTO.UserView.UserPut.class) UserDTO userDTO) {
+        log.debug("PUT updateUser userDTO received {}", userDTO.toString());
+        UserModel userModel = userService.findById(userId);
+        userModel.setFullName(userDTO.fullName());
+        userModel.setPhoneNumber(userDTO.phoneNumber());
+        userModel.setCpf(userDTO.cpf());
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.updateUser(userModel);
 
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        }
+        log.debug("PUT updateUser userId saved {}", userModel.getUserId());
+        log.info("User updated successfully userId {}", userModel.getUserId());
+        return ResponseEntity.ok(userModel);
     }
 
     @PutMapping("/{userId}/password")
     public ResponseEntity<Object> updatePassword(@PathVariable(value = "userId") UUID userId,
                                                  @RequestBody @Validated(UserDTO.UserView.PasswordPut.class)
-                                                 @JsonView(UserDTO.UserView.PasswordPut.class) UserDTO userDto) {
-        log.debug("PUT updatePassword userDTO received {}", userDto.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            log.warn("User not found userId {}", userId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } if (!userModelOptional.get().getPassword().equals(userDto.oldPassword())) {
-            log.warn("Mismatched old password userId {}", userDto.userId());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched Old password!");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setPassword(userDto.password());
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.updatePassword(userModel);
-            log.debug("PUT updatePassword userId saved {}", userModel.getUserId());
-            log.info("Password updated successfully userId {}", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body("Password updated sucessfully");
+                                                 @JsonView(UserDTO.UserView.PasswordPut.class) UserDTO userDTO) {
+        log.debug("PUT updatePassword userDTO received {}", userDTO.toString());
+        UserModel userModel = userService.findById(userId);
+        if (!userModel.getPassword().equals(userDTO.oldPassword())) {
+            log.warn("Mismatched old password userId {}", userId);
+            throw new IllegalArgumentException("Error: Mismatched old password!");
         }
+        userModel.setPassword(userDTO.password());
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.updatePassword(userModel);
+
+        log.debug("PUT updatePassword userId saved {}", userModel.getUserId());
+        log.info("Password updated successfully userId {}", userModel.getUserId());
+        return ResponseEntity.ok("Password updated successfully");
     }
 
     @PutMapping("/{userId}/image")
     public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
                                               @RequestBody @Validated(UserDTO.UserView.ImagePut.class)
-                                              @JsonView(UserDTO.UserView.ImagePut.class) UserDTO userDto) {
-        log.debug("PUT updateImage userDTO received {}", userDto.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            log.warn("User not found userId {}", userId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setImageUrl(userDto.imageUrl());
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.updateUser(userModel);
-            log.debug("PUT updateImage userId saved {}", userModel.getUserId());
-            log.info("User image updated successfully userId {}", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        }
+                                              @JsonView(UserDTO.UserView.ImagePut.class) UserDTO userDTO) {
+        log.debug("PUT updateImage userDTO received {}", userDTO.toString());
+        UserModel userModel = userService.findById(userId);
+        userModel.setImageUrl(userDTO.imageUrl());
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.updateUser(userModel);
+
+        log.debug("PUT updateImage userId saved {}", userModel.getUserId());
+        log.info("Image updated successfully userId {}", userModel.getUserId());
+        return ResponseEntity.ok(userModel);
     }
 }

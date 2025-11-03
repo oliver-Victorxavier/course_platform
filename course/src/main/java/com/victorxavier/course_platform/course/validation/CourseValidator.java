@@ -3,6 +3,7 @@ package com.victorxavier.course_platform.course.validation;
 import com.victorxavier.course_platform.course.configs.security.AuthenticationCurrentUserService;
 import com.victorxavier.course_platform.course.dtos.CourseDTO;
 import com.victorxavier.course_platform.course.enums.UserType;
+import com.victorxavier.course_platform.course.exception.ResourceNotFoundException;
 import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -45,17 +45,19 @@ public class CourseValidator implements Validator {
     private void validateUserInstructor(UUID userInstructor, Errors errors) {
         UUID currentUserId = authenticationCurrentUserService.getCurrentUser().getUserId();
         if (currentUserId.equals(userInstructor)) {
-            Optional<UserModel> userModelOptional = userService.findById(userInstructor);
-            if (!userModelOptional.isPresent()) {
+
+            try {
+                UserModel userModel = userService.findById(userInstructor);
+                if (userModel.getUserType().equals(UserType.STUDENT.toString())) {
+                    errors.rejectValue("userInstructor", "UserInstructorError", "User must be INSTRUCTOR or ADMIN.");
+                }
+
+            } catch (ResourceNotFoundException e) {
                 errors.rejectValue("userInstructor", "UserInstructorError", "Instructor not found.");
-                return;
             }
-            if (userModelOptional.get().getUserType().equals(UserType.STUDENT.toString())) {
-                errors.rejectValue("userInstructor", "UserInstructorError", "User must be INSTRUCTOR or ADMIN.");
-            }
+
         } else {
             errors.rejectValue("userInstructor", "UserInstructorError", "Access denied. You can only create courses for yourself.");
         }
     }
-
 }

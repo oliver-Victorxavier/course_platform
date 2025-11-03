@@ -1,5 +1,6 @@
 package com.victorxavier.course_platform.course.services.impl;
 
+import com.victorxavier.course_platform.course.exception.ResourceNotFoundException;
 import com.victorxavier.course_platform.course.models.UserModel;
 import com.victorxavier.course_platform.course.repositories.CourseRepository;
 import com.victorxavier.course_platform.course.repositories.UserRepository;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,7 +42,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserModel> findById(UUID userInstructor) {
-        return userRepository.findById(userInstructor);
+    public UserModel findById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with ID %s not found", userId)));
     }
 }
